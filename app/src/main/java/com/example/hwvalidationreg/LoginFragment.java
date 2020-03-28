@@ -117,6 +117,67 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        regButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int count = 0;
+                if (!isPhoneValid(new SpannableStringBuilder(phoneFormatWatcher.getMask().toUnformattedString()))) {
+                    phoneTextInput.setError("Неправильно введений номер!");
+                } else {
+                    phoneTextInput.setError(null);
+                    count += 1;
+                }
+
+                if (!isEmailValid(emailEditText.getText())) {
+                    if (emailEditText.getText().toString().contains("admin@gmail.com")){
+                        emailTextInput.setError("Адреса зарезервована!");
+                    }else {
+                        emailTextInput.setError("Неправильна адреса!");
+                    }
+                } else {
+                    emailTextInput.setError(null);
+                    count += 1;
+                }
+
+                if (!isPasswordValid(passwordEditText.getText())) {
+                    passwordTextInput.setError("Пароль має бути 8 символів!");
+                } else {
+                    passwordTextInput.setError(null);
+                    count += 1;
+                }
+
+                if (count >= 3){
+                    CommonUtils.showLoading(getActivity());
+                    uploadData();
+                    Intent intent = new Intent(getActivity(), UserActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        // Clear the error once more than 8 characters are typed.
+        regButton.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (isPhoneValid(new SpannableStringBuilder(phoneFormatWatcher.getMask().toUnformattedString()))) {
+                    phoneTextInput.setError(null); //Clear the error
+                    //return true;
+                }
+
+                if (isEmailValid(emailEditText.getText())) {
+                    emailTextInput.setError(null); //Clear the error
+                    //return true;
+                }
+
+                if (isPasswordValid(passwordEditText.getText())) {
+                    passwordTextInput.setError(null); //Clear the error
+                    //return true;
+                }
+
+                return false;
+            }
+        });
+
         return view;
     }
 
